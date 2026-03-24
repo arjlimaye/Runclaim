@@ -17,6 +17,9 @@ end
 target 'RunClaim' do
   config = use_native_modules!
 
+  pod 'GoogleMaps'
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
@@ -24,6 +27,12 @@ target 'RunClaim' do
   )
 
   post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['OTHER_LDFLAGS'] ||= ['']
+        config.build_settings['OTHER_LDFLAGS'] << '-ObjC'
+      end
+    end
     react_native_post_install(
       installer,
       config[:reactNativePath],
