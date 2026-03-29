@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../lib/supabase';
@@ -90,24 +91,20 @@ export default function SettingsScreen({ navigation }: any) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Subscription</Text>
+        <Text style={styles.sectionLabel}>Legal</Text>
         <View style={styles.card}>
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Plan</Text>
-            <Text style={styles.rowValTeal}>Free</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionLabel}>More</Text>
-        <View style={styles.card}>
-          <TouchableOpacity style={styles.row} onPress={() => Alert.alert('Coming soon')}>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={() => Linking.openURL('https://quiet-nurse-6b4.notion.site/RunClaim-Privacy-Policy-32ff134b79de801ca932cd78b2ae1f85')}
+          >
             <Text style={styles.rowLabel}>Privacy Policy</Text>
             <Text style={styles.rowArrow}>→</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
-          <TouchableOpacity style={styles.row} onPress={() => Alert.alert('Coming soon')}>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={() => Linking.openURL('https://quiet-nurse-6b4.notion.site/RunClaim-Terms-of-Service-32ff134b79de80ec99d4d595e226844e')}
+          >
             <Text style={styles.rowLabel}>Terms of Service</Text>
             <Text style={styles.rowArrow}>→</Text>
           </TouchableOpacity>
@@ -190,12 +187,6 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceGrotesk-Medium',
     fontSize: 13,
     color: '#ffffff',
-    letterSpacing: 1,
-  },
-  rowValTeal: {
-    fontFamily: 'SpaceGrotesk-Medium',
-    fontSize: 13,
-    color: '#3ecfb2',
     letterSpacing: 1,
   },
   rowArrow: {

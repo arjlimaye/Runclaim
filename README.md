@@ -80,3 +80,4 @@ Turn cities into competitive, interactive maps where movement creates ownership.
 ## 📬 Contact
 
 If you're interested in what I'm building or want to collaborate, feel free to reach out.
+

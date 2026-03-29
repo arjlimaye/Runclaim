@@ -30,7 +30,6 @@ export default function App() {
 
   useEffect(() => {
     const init = async () => {
-       await AsyncStorage.removeItem('runclaim_onboarding_done');
       const done = await AsyncStorage.getItem('runclaim_onboarding_done');
       setOnboardingDone(done === 'true');
 

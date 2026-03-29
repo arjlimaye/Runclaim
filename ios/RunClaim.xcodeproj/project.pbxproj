@@ -18,6 +18,7 @@
 		BB781C4C2F5F069B00DE438C /* SpaceGrotesk-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB781C482F5F069B00DE438C /* SpaceGrotesk-Regular.ttf */; };
 		BB781C4D2F5F069B00DE438C /* SpaceGrotesk-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB781C492F5F069B00DE438C /* SpaceGrotesk-SemiBold.ttf */; };
 		BB781C4E2F5F069B00DE438C /* Teko-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB781C4A2F5F069B00DE438C /* Teko-Bold.ttf */; };
+		BBD8DEAB2F79344300D6B06B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BBD8DEAA2F79344300D6B06B /* PrivacyInfo.xcprivacy */; };
 		E46E4D5905B888DE8DECA0D5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		BB781C492F5F069B00DE438C /* SpaceGrotesk-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SpaceGrotesk-SemiBold.ttf"; path = "RunClaim/SpaceGrotesk-SemiBold.ttf"; sourceTree = "<group>"; };
 		BB781C4A2F5F069B00DE438C /* Teko-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Teko-Bold.ttf"; path = "RunClaim/Teko-Bold.ttf"; sourceTree = "<group>"; };
 		BB9E5C0D2F5F4DC70054C4E7 /* claim.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = claim.wav; path = ../../Desktop/claim.wav; sourceTree = "<group>"; };
+		BBD8DEAA2F79344300D6B06B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EA17B0D957B6EB3F27C3F2F4 /* GoogleMapsInitializer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = GoogleMapsInitializer.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -88,6 +90,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BBD8DEAA2F79344300D6B06B /* PrivacyInfo.xcprivacy */,
 				BB9E5C0D2F5F4DC70054C4E7 /* claim.wav */,
 				BB3D0DA02F60994300106891 /* claim.wav */,
 				BB781C472F5F069B00DE438C /* SpaceGrotesk-Medium.ttf */,
@@ -185,6 +188,7 @@
 				BB3D0DA12F60994300106891 /* claim.wav in Resources */,
 				BB781C4B2F5F069B00DE438C /* SpaceGrotesk-Medium.ttf in Resources */,
 				BB781C4C2F5F069B00DE438C /* SpaceGrotesk-Regular.ttf in Resources */,
+				BBD8DEAB2F79344300D6B06B /* PrivacyInfo.xcprivacy in Resources */,
 				BB781C4D2F5F069B00DE438C /* SpaceGrotesk-SemiBold.ttf in Resources */,
 				BB781C4E2F5F069B00DE438C /* Teko-Bold.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
@@ -220,9 +224,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RunClaim/Pods-RunClaim-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RunClaim/Pods-RunClaim-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -259,9 +267,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RunClaim/Pods-RunClaim-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RunClaim/Pods-RunClaim-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -304,6 +316,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.arjunlimaye.runclaim;
 				PRODUCT_NAME = RunClaim;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_OBJC_BRIDGING_HEADER = "RunClaim/RunClaim-Bridging-Header.h";
@@ -334,6 +347,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.arjunlimaye.runclaim;
 				PRODUCT_NAME = RunClaim;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_OBJC_BRIDGING_HEADER = "RunClaim/RunClaim-Bridging-Header.h";
