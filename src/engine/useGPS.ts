@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Geolocation from '@react-native-community/geolocation';
 
-// Request always-on location permission for background tracking
-Geolocation.requestAuthorization('always');
+Geolocation.requestAuthorization('whenInUse');
 
 export type GPSPoint = {
   lat: number;
