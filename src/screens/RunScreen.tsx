@@ -7,6 +7,8 @@ import {
   StatusBar,
   Animated,
   Easing,
+  Platform,
+  NativeModules,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Polygon } from 'react-native-svg';
@@ -34,6 +36,9 @@ export default function RunScreen({ navigation }: any) {
   const mapScale = useRef(new Animated.Value(1)).current;
   const glowLoopRef = useRef<any>(null);
   const pulseLoopRef = useRef<any>(null);
+  const liveActivityStarted = useRef(false);
+  const startTimestampRef = useRef<number | null>(null);
+  const accumulatedRef = useRef(0);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -85,12 +90,24 @@ export default function RunScreen({ navigation }: any) {
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (tracking && !isPaused) {
-      interval = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
+      startTimestampRef.current = Date.now();
+      interval = setInterval(() => {
+        setElapsedSeconds(accumulatedRef.current + Math.floor((Date.now() - startTimestampRef.current!) / 1000));
+      }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (startTimestampRef.current !== null) {
+        accumulatedRef.current += Math.floor((Date.now() - startTimestampRef.current) / 1000);
+        startTimestampRef.current = null;
+      }
+    };
   }, [tracking, isPaused]);
 
   useEffect(() => {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization(() => {}, () => {});
+    }
     start();
     return () => stop();
   }, []);
@@ -156,6 +173,26 @@ export default function RunScreen({ navigation }: any) {
     };
   }, []);
 
+  // Start Live Activity when GPS tracking begins
+  useEffect(() => {
+    if (!tracking) return;
+    if (Platform.OS === 'ios') {
+      console.log('[RunClaim] LiveActivityBridge.startActivity called', { elapsedSeconds: 0, distanceKm: 0, bridge: !!NativeModules.LiveActivityBridge });
+      NativeModules.LiveActivityBridge?.startActivity(0, 0);
+      liveActivityStarted.current = true;
+    }
+  }, [tracking]);
+
+  // Update Live Activity every 5 elapsed seconds
+  useEffect(() => {
+    if (!liveActivityStarted.current) return;
+    if (elapsedSeconds % 5 !== 0) return;
+    if (Platform.OS === 'ios') {
+      console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
+      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path));
+    }
+  }, [elapsedSeconds, path]);
+
   const handlePause = () => {
     setIsPaused(true);
     stop();
@@ -182,10 +219,19 @@ export default function RunScreen({ navigation }: any) {
     stop();
     const claimedIds = getClaimedHexes(path);
     console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
-    const { data: { user } } = await supabase.auth.getUser();
-    const ownerId = user?.id ?? 'local_user';
+    let ownerId = 'local_user';
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      ownerId = user?.id ?? 'local_user';
+    } catch {
+      // proceed with local_user fallback
+    }
     const { newHexes, reinforced, maxDepth } = await processRunHexes(claimedIds, ownerId);
     console.log(`[RunClaim] processRunHexes done — new: ${newHexes}, reinforced: ${reinforced}, maxDepth: ${maxDepth}`);
+    if (Platform.OS === 'ios') {
+      NativeModules.LiveActivityBridge?.endActivity();
+      liveActivityStarted.current = false;
+    }
     navigation.navigate('Claim', {
       hexesClaimed: newHexes,
       reinforced,
@@ -357,6 +403,23 @@ export default function RunScreen({ navigation }: any) {
       )}
     </SafeAreaView>
   );
+}
+
+function getDistanceKm(pts: { lat: number; lng: number }[]): number {
+  if (pts.length < 2) return 0;
+  let total = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const R = 6371000;
+    const dLat = ((pts[i].lat - pts[i - 1].lat) * Math.PI) / 180;
+    const dLng = ((pts[i].lng - pts[i - 1].lng) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((pts[i - 1].lat * Math.PI) / 180) *
+        Math.cos((pts[i].lat * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
+    total += R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+  return total / 1000;
 }
 
 const styles = StyleSheet.create({
