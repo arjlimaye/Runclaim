@@ -187,10 +187,9 @@ export default function RunScreen({ navigation }: any) {
     }
   }, [tracking]);
 
-  // Update Live Activity every 5 elapsed seconds
+  // Update Live Activity every elapsed second
   useEffect(() => {
     if (!liveActivityStarted.current) return;
-    if (elapsedSeconds % 5 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
       NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path));
