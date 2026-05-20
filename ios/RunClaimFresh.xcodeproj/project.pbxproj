@@ -20,10 +20,11 @@
 		BB602F5B2FBC7FB6006AA0DA /* RunClaimLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BB602F4A2FBC7FB3006AA0DA /* RunClaimLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BB602F642FBC8090006AA0DA /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB602F632FBC8090006AA0DA /* ActivityKit.framework */; };
 		BB6EA18D2F98A51F0002B0F7 /* claim.wav in Resources */ = {isa = PBXBuildFile; fileRef = BB6EA18C2F98A51E0002B0F7 /* claim.wav */; };
-		D944A67F7C1F4993BEE91096 /* Teko-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB9DA3D4EEA74F2DBA98CD42 /* Teko-Bold.ttf */; };
-		E9BC6629FA714B7EBF8BA171 /* SpaceGrotesk-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98F2632638634C6089E41A77 /* SpaceGrotesk-Regular.ttf */; };
 		BB7A1D031A680F5B00A75B9A /* LiveActivityBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BB7A1D001A680F5B00A75B9A /* LiveActivityBridge.m */; };
 		BB7A1D041A680F5B00A75B9A /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7A1D011A680F5B00A75B9A /* LiveActivityBridge.swift */; };
+		BB7A1D061A680F5B00A75B9A /* RunClaimLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7A1D051A680F5B00A75B9A /* RunClaimLiveActivityAttributes.swift */; };
+		D944A67F7C1F4993BEE91096 /* Teko-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB9DA3D4EEA74F2DBA98CD42 /* Teko-Bold.ttf */; };
+		E9BC6629FA714B7EBF8BA171 /* SpaceGrotesk-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98F2632638634C6089E41A77 /* SpaceGrotesk-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,11 +71,12 @@
 		BB602F4D2FBC7FB3006AA0DA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		BB602F632FBC8090006AA0DA /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 		BB6EA18C2F98A51E0002B0F7 /* claim.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = claim.wav; sourceTree = "<group>"; };
-		E8D5E5B8B6A245B79917B600 /* SpaceGrotesk-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceGrotesk-SemiBold.ttf"; path = "../src/assets/fonts/SpaceGrotesk-SemiBold.ttf"; sourceTree = "<group>"; };
-		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		BB7A1D001A680F5B00A75B9A /* LiveActivityBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LiveActivityBridge.m; path = RunClaimFresh/LiveActivityBridge.m; sourceTree = "<group>"; };
 		BB7A1D011A680F5B00A75B9A /* LiveActivityBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LiveActivityBridge.swift; path = RunClaimFresh/LiveActivityBridge.swift; sourceTree = "<group>"; };
 		BB7A1D021A680F5B00A75B9A /* RunClaimFresh-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "RunClaimFresh-Bridging-Header.h"; path = "RunClaimFresh/RunClaimFresh-Bridging-Header.h"; sourceTree = "<group>"; };
+		BB7A1D051A680F5B00A75B9A /* RunClaimLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RunClaimLiveActivityAttributes.swift; path = RunClaimFresh/RunClaimLiveActivityAttributes.swift; sourceTree = "<group>"; };
+		E8D5E5B8B6A245B79917B600 /* SpaceGrotesk-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceGrotesk-SemiBold.ttf"; path = "../src/assets/fonts/SpaceGrotesk-SemiBold.ttf"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -133,6 +135,7 @@
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				BB7A1D001A680F5B00A75B9A /* LiveActivityBridge.m */,
 				BB7A1D011A680F5B00A75B9A /* LiveActivityBridge.swift */,
+				BB7A1D051A680F5B00A75B9A /* RunClaimLiveActivityAttributes.swift */,
 				BB7A1D021A680F5B00A75B9A /* RunClaimFresh-Bridging-Header.h */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -395,6 +398,7 @@
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
 				BB7A1D031A680F5B00A75B9A /* LiveActivityBridge.m in Sources */,
 				BB7A1D041A680F5B00A75B9A /* LiveActivityBridge.swift in Sources */,
+				BB7A1D061A680F5B00A75B9A /* RunClaimLiveActivityAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,7 +427,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RunClaimFresh/RunClaimFresh.entitlements;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = 534TXSJ4SF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RunClaimFresh/Info.plist;
@@ -459,7 +463,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RunClaimFresh/RunClaimFresh.entitlements;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = 534TXSJ4SF;
 				INFOPLIST_FILE = RunClaimFresh/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RunClaim;

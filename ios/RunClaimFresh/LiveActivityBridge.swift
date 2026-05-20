@@ -10,8 +10,8 @@ class LiveActivityBridge: NSObject {
 
     @objc(startActivity:distanceKm:)
     func startActivity(_ elapsedSeconds: Double, distanceKm: Double) {
-        guard #available(iOS 16.1, *) else {
-            print("[RunClaim] LiveActivity: iOS 16.1+ required, skipping")
+        guard #available(iOS 16.2, *) else {
+            print("[RunClaim] LiveActivity: iOS 16.2+ required, skipping")
             return
         }
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
@@ -39,7 +39,7 @@ class LiveActivityBridge: NSObject {
 
     @objc(updateActivity:distanceKm:)
     func updateActivity(_ elapsedSeconds: Double, distanceKm: Double) {
-        guard #available(iOS 16.1, *) else { return }
+        guard #available(iOS 16.2, *) else { return }
         guard let activity = activityInstance as? Activity<RunClaimLiveActivityAttributes> else { return }
 
         let state = RunClaimLiveActivityAttributes.ContentState(
@@ -54,7 +54,7 @@ class LiveActivityBridge: NSObject {
 
     @objc(endActivity)
     func endActivity() {
-        guard #available(iOS 16.1, *) else { return }
+        guard #available(iOS 16.2, *) else { return }
         guard let activity = activityInstance as? Activity<RunClaimLiveActivityAttributes> else { return }
 
         Task {
