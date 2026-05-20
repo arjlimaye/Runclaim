@@ -41,6 +41,10 @@ export default function RunScreen({ navigation }: any) {
   const accumulatedRef = useRef(0);
 
   useEffect(() => {
+    console.log('LiveActivityBridge available:', !!NativeModules.LiveActivityBridge);
+  }, []);
+
+  useEffect(() => {
     Geolocation.getCurrentPosition(
       async pos => {
         const { latitude, longitude } = pos.coords;
