@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { Platform } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-
-Geolocation.requestAuthorization('whenInUse');
 
 export type GPSPoint = {
   lat: number;
@@ -50,11 +49,10 @@ export function useGPS() {
       (error) => console.warn('GPS error:', error),
       {
         enableHighAccuracy: true,
-        distanceFilter: 10,
-        interval: 5000,
-        fastestInterval: 2000,
+        distanceFilter: 5,
+        ...(Platform.OS === 'android' ? { interval: 1000, fastestInterval: 500 } : {}),
+        ...(Platform.OS === 'ios' ? { showsBackgroundLocationIndicator: true } : {}),
         pausesLocationUpdatesAutomatically: false,
-        allowsBackgroundLocationUpdates: true,
       }
     );
 

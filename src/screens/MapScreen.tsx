@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ActivityIndicator, Platform } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import MapView, { Region } from 'react-native-maps';
@@ -98,8 +98,8 @@ export default function MapScreen({ navigation }: Props) {
       <MapView
         style={StyleSheet.absoluteFill}
         initialRegion={region}
-        mapType="mutedStandard"
-        userInterfaceStyle={isDark ? 'dark' : 'light'}
+        mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+        {...(Platform.OS === 'ios' ? { userInterfaceStyle: isDark ? 'dark' : 'light' } : {})}
         showsUserLocation={true}
         showsCompass={false}
         showsScale={false}

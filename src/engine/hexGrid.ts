@@ -21,7 +21,10 @@ export function getClaimedHexes(path: { lat: number; lng: number }[]): string[] 
 }
 
 export function hexIdToPolygon(hexId: string): { latitude: number; longitude: number }[] {
-  const [q, r] = hexId.split('_').map(Number);
+  const parts = hexId.split('_');
+  if (parts.length < 2) return [];
+  const [q, r] = parts.map(Number);
+  if (!isFinite(q) || !isFinite(r)) return [];
 
   // Inverse of latLngToHexId: recover Mercator x/y from q/r
   const y = (r * HEX_SIZE_METERS * 3) / 2;

@@ -53,6 +53,7 @@ export default function HexOverlay({ claimedHexIds, hexStore }: Props) {
         const depth = hexStore?.[id]?.depth_level ?? 1;
         const { fill, stroke } = depthToColors(depth);
         const corners = hexIdToPolygon(id);
+        if (corners.length === 0) return null;
 
         if (depth === 7) {
           return (
@@ -68,7 +69,7 @@ export default function HexOverlay({ claimedHexIds, hexStore }: Props) {
               <Polygon
                 coordinates={corners}
                 fillColor={`rgba(255, 220, 100, ${d7GlowOpacity.toFixed(3)})`}
-                strokeColor={`rgba(255, 200, 50, ${(d7GlowOpacity + 0.3).toFixed(3)})`}
+                strokeColor={`rgba(255, 200, 50, ${Math.min(d7GlowOpacity + 0.3, 1).toFixed(3)})`}
                 strokeWidth={3}
               />
             </React.Fragment>

@@ -46,16 +46,18 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>RunClaim needs location access during your run so your territory is tracked even when your screen is off.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>RunClaim uses your location during runs to track the territory you've claimed on the map.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSSupportsLiveActivitiesFrequentUpdates</key>
+	<true/>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
 	</array>
-	<key>RCTNewArchEnabled</key>
-	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Teko-Bold.ttf</string>
@@ -63,7 +65,7 @@
 		<string>SpaceGrotesk-SemiBold.ttf</string>
 		<string>SpaceGrotesk-Medium.ttf</string>
 	</array>
-	<key>UILaunchStoryboardName</key>
+<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
