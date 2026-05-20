@@ -2,9 +2,10 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { Platform } from 'react-native';
 import { supabase } from './supabase';
-import { GOOGLE_WEB_CLIENT_ID } from './config';
+import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from './config';
 
 GoogleSignin.configure({
+  iosClientId: GOOGLE_IOS_CLIENT_ID,
   webClientId: GOOGLE_WEB_CLIENT_ID,
 });
 
