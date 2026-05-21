@@ -335,7 +335,7 @@ export default function AuthScreen() {
               disabled={socialLoading !== null}
               activeOpacity={0.82}>
               {socialLoading === 'apple' ? (
-                <ActivityIndicator color="#000000" />
+                <ActivityIndicator color="#ffffff" />
               ) : (
                 <Text style={[styles.btnSocialText, styles.btnAppleText]}>Continue with Apple</Text>
               )}
@@ -490,8 +490,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   btnSocial: {
+    backgroundColor: '#1a1a1a',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
+    borderColor: '#3ecfb2',
     borderRadius: 3,
     paddingVertical: 18,
     alignItems: 'center',
@@ -504,10 +505,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textTransform: 'uppercase',
   },
-  btnApple: {
-    backgroundColor: '#ffffff',
-  },
-  btnAppleText: {
-    color: '#000000',
-  },
+  btnApple: {},
+  btnAppleText: {},
 });
