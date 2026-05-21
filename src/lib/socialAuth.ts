@@ -1,7 +1,6 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { Platform } from 'react-native';
-import CryptoJS from 'crypto-js';
 import { supabase } from './supabase';
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from './config';
 
@@ -25,19 +24,18 @@ export async function signInWithGoogle(): Promise<void> {
 
 export async function signInWithApple(): Promise<void> {
   if (Platform.OS !== 'ios') throw new Error('Apple sign-in is only available on iOS.');
-  const rawNonce = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-  const hashedNonce = CryptoJS.SHA256(rawNonce).toString(CryptoJS.enc.Hex);
+  const nonce = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
   const credential = await appleAuth.performRequest({
     requestedOperation: appleAuth.Operation.LOGIN,
     requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    nonce: rawNonce,
+    nonce,
   });
   const idToken = credential.identityToken;
   if (!idToken) throw new Error('No identity token returned from Apple sign-in.');
   const { error } = await supabase.auth.signInWithIdToken({
     provider: 'apple',
     token: idToken,
-    nonce: hashedNonce,
+    nonce,
   });
   if (error) throw error;
 }

@@ -187,9 +187,10 @@ export default function RunScreen({ navigation }: any) {
     }
   }, [tracking]);
 
-  // Update Live Activity every elapsed second
+  // Update Live Activity every 10 seconds (iOS throttles Live Activity updates heavily in background)
   useEffect(() => {
     if (!liveActivityStarted.current) return;
+    if (elapsedSeconds % 10 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
       NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path));
@@ -220,6 +221,7 @@ export default function RunScreen({ navigation }: any) {
 
   const handleEndRun = async () => {
     stop();
+    console.log(`[RunClaim] path.length=${path.length} first=${JSON.stringify(path[0])} last=${JSON.stringify(path[path.length - 1])}`);
     const claimedIds = getClaimedHexes(path);
     console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
     let ownerId = 'local_user';

@@ -49,7 +49,7 @@ export function useGPS() {
       (error) => console.warn('GPS error:', error),
       {
         enableHighAccuracy: true,
-        distanceFilter: 5,
+        distanceFilter: 3,
         ...(Platform.OS === 'android' ? { interval: 1000, fastestInterval: 500 } : {}),
         ...(Platform.OS === 'ios' ? { showsBackgroundLocationIndicator: true } : {}),
         pausesLocationUpdatesAutomatically: false,
