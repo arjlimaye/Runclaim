@@ -17,6 +17,7 @@ export async function signInWithGoogle(): Promise<void> {
   const { error } = await supabase.auth.signInWithIdToken({
     provider: 'google',
     token: idToken,
+    nonce: undefined,
   });
   if (error) throw error;
 }
@@ -26,12 +27,14 @@ export async function signInWithApple(): Promise<void> {
   const credential = await appleAuth.performRequest({
     requestedOperation: appleAuth.Operation.LOGIN,
     requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    nonce: undefined,
   });
   const idToken = credential.identityToken;
   if (!idToken) throw new Error('No identity token returned from Apple sign-in.');
   const { error } = await supabase.auth.signInWithIdToken({
     provider: 'apple',
     token: idToken,
+    nonce: undefined,
   });
   if (error) throw error;
 }
