@@ -9,14 +9,38 @@ export function latLngToHexId(lat: number, lng: number): string {
   return `${q}_${r}`;
 }
 
+function interpolatePath(path: { lat: number; lng: number }[], stepMeters: number = 5): { lat: number; lng: number }[] {
+  if (path.length < 2) return path;
+  const result: { lat: number; lng: number }[] = [];
+  for (let i = 0; i < path.length - 1; i++) {
+    const a = path[i];
+    const b = path[i + 1];
+    const dLat = (b.lat - a.lat) * Math.PI / 180;
+    const dLng = (b.lng - a.lng) * Math.PI / 180;
+    const sinDLat = Math.sin(dLat / 2);
+    const sinDLng = Math.sin(dLng / 2);
+    const haversine = sinDLat * sinDLat +
+      Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) * sinDLng * sinDLng;
+    const distMeters = EARTH_RADIUS * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+    const steps = Math.max(1, Math.ceil(distMeters / stepMeters));
+    for (let s = 0; s < steps; s++) {
+      const t = s / steps;
+      result.push({ lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t });
+    }
+  }
+  result.push(path[path.length - 1]);
+  return result;
+}
+
 export function getClaimedHexes(path: { lat: number; lng: number }[]): string[] {
+  const dense = interpolatePath(path, 5);
   const hexCounts: Record<string, number> = {};
-  for (const point of path) {
+  for (const point of dense) {
     const id = latLngToHexId(point.lat, point.lng);
     hexCounts[id] = (hexCounts[id] || 0) + 1;
   }
   return Object.entries(hexCounts)
-    .filter(([_, count]) => count >= 10)
+    .filter(([_, count]) => count >= 3)
     .map(([id]) => id);
 }
 
