@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { enableScreens } from 'react-native-screens';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './src/lib/supabase';
 import { initializePurchases } from './src/lib/purchases';
@@ -26,6 +26,7 @@ export default function App() {
   const [onboardingDone, setOnboardingDone] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [needsUsername, setNeedsUsername] = useState(false);
+  const loadingRef = useRef(true);
 
   const checkUsername = async (userId: string) => {
     const { data } = await supabase
@@ -41,13 +42,33 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // FIX 1: if app comes to foreground while still loading, force auth screen after 3s
+    const appStateSub = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active' && loadingRef.current) {
+        setTimeout(() => {
+          if (loadingRef.current) {
+            loadingRef.current = false;
+            setLoading(false);
+          }
+        }, 3000);
+      }
+    });
+
     const init = async () => {
       const done = await AsyncStorage.getItem('runclaim_onboarding_done');
       setOnboardingDone(done === 'true');
 
-      const { data: { session } } = await supabase.auth.getSession();
+      // FIX 1: race getSession against a 5-second timeout; on timeout default to auth screen
+      const sessionTimeout = new Promise<{ data: { session: null } }>((resolve) =>
+        setTimeout(() => resolve({ data: { session: null } }), 5000)
+      );
+      const { data: { session } } = await Promise.race([
+        supabase.auth.getSession(),
+        sessionTimeout,
+      ]);
       setSession(session);
       if (session?.user) await checkUsername(session.user.id);
+      loadingRef.current = false;
       setLoading(false);
     };
     init();
@@ -61,7 +82,10 @@ export default function App() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      appStateSub.remove();
+    };
   }, []);
 
   if (loading) {
