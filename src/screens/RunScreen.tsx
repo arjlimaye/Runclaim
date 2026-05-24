@@ -29,6 +29,9 @@ export default function RunScreen({ navigation }: any) {
   const centerLatRef = useRef<number | null>(null);
   const centerLngRef = useRef<number | null>(null);
 
+  const [isEnding, setIsEnding] = useState(false);
+  const isEndingRef = useRef(false);
+
   const glowAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const hexOpacity = useRef(new Animated.Value(1)).current;
@@ -182,7 +185,7 @@ export default function RunScreen({ navigation }: any) {
     if (!tracking) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.startActivity called', { elapsedSeconds: 0, distanceKm: 0, bridge: !!NativeModules.LiveActivityBridge });
-      NativeModules.LiveActivityBridge?.startActivity(0, 0);
+      NativeModules.LiveActivityBridge?.startActivity(0, 0, Math.floor(Date.now() / 1000));
       liveActivityStarted.current = true;
     }
   }, [tracking]);
@@ -193,7 +196,7 @@ export default function RunScreen({ navigation }: any) {
     if (elapsedSeconds % 10 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
-      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path));
+      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), Math.floor(Date.now() / 1000));
     }
   }, [elapsedSeconds, path]);
 
@@ -220,32 +223,41 @@ export default function RunScreen({ navigation }: any) {
   };
 
   const handleEndRun = async () => {
-    stop();
-    console.log(`[RunClaim] path.length=${path.length} first=${JSON.stringify(path[0])} last=${JSON.stringify(path[path.length - 1])}`);
-    const claimedIds = getClaimedHexes(path);
-    console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
-    let ownerId = 'local_user';
+    if (isEndingRef.current) return;
+    isEndingRef.current = true;
+    setIsEnding(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      ownerId = user?.id ?? 'local_user';
-    } catch {
-      // proceed with local_user fallback
+      stop();
+      console.log(`[RunClaim] path.length=${path.length} first=${JSON.stringify(path[0])} last=${JSON.stringify(path[path.length - 1])}`);
+      const claimedIds = getClaimedHexes(path);
+      console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
+      let ownerId = 'local_user';
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        ownerId = user?.id ?? 'local_user';
+      } catch {
+        // proceed with local_user fallback
+      }
+      const { newHexes, reinforced, maxDepth } = await processRunHexes(claimedIds, ownerId);
+      console.log(`[RunClaim] processRunHexes done — new: ${newHexes}, reinforced: ${reinforced}, maxDepth: ${maxDepth}`);
+      if (Platform.OS === 'ios') {
+        NativeModules.LiveActivityBridge?.endActivity();
+        liveActivityStarted.current = false;
+      }
+      navigation.navigate('Claim', {
+        hexesClaimed: newHexes,
+        reinforced,
+        distanceKm: getDistance(),
+        elapsedSeconds,
+        maxDepth,
+        punePct: cityPct,
+        isFirstRun: newHexes === 0 && reinforced === 0,
+      });
+    } catch (e) {
+      console.error('[RunClaim] handleEndRun error:', e);
+      isEndingRef.current = false;
+      setIsEnding(false);
     }
-    const { newHexes, reinforced, maxDepth } = await processRunHexes(claimedIds, ownerId);
-    console.log(`[RunClaim] processRunHexes done — new: ${newHexes}, reinforced: ${reinforced}, maxDepth: ${maxDepth}`);
-    if (Platform.OS === 'ios') {
-      NativeModules.LiveActivityBridge?.endActivity();
-      liveActivityStarted.current = false;
-    }
-    navigation.navigate('Claim', {
-      hexesClaimed: newHexes,
-      reinforced,
-      distanceKm: getDistance(),
-      elapsedSeconds,
-      maxDepth,
-      punePct: cityPct,
-      isFirstRun: newHexes === 0 && reinforced === 0,
-    });
   };
 
   const formatTime = (secs: number) => {
@@ -351,10 +363,11 @@ export default function RunScreen({ navigation }: any) {
         <View style={styles.bottom}>
           <Animated.View style={[styles.btnWrap, { transform: [{ scale: pauseScale }] }]}>
             <TouchableOpacity
-              style={styles.btnEnd}
+              style={[styles.btnEnd, isEnding && { opacity: 0.4 }]}
               onPressIn={() => pressIn(pauseScale)}
               onPressOut={() => pressOut(pauseScale)}
               onPress={handleEndRun}
+              disabled={isEnding}
               activeOpacity={1}>
               <Text style={styles.btnEndText}>End Run</Text>
             </TouchableOpacity>

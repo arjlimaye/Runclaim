@@ -40,7 +40,7 @@ export function getClaimedHexes(path: { lat: number; lng: number }[]): string[] 
     hexCounts[id] = (hexCounts[id] || 0) + 1;
   }
   return Object.entries(hexCounts)
-    .filter(([_, count]) => count >= 3)
+    .filter(([_, count]) => count >= 1)
     .map(([id]) => id);
 }
 

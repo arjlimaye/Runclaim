@@ -49,7 +49,7 @@ struct RunClaimLiveActivityLiveActivity: Widget {
                 HStack(spacing: 0) {
                     // Left: elapsed time
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(formatTime(context.state.elapsedSeconds))
+                        Text(Date(timeIntervalSince1970: context.state.startTimestamp), style: .timer)
                             .font(.system(size: 34, weight: .bold, design: .default))
                             .foregroundColor(.white)
                             .monospacedDigit()
@@ -87,7 +87,7 @@ struct RunClaimLiveActivityLiveActivity: Widget {
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(formatTime(context.state.elapsedSeconds))
+                        Text(Date(timeIntervalSince1970: context.state.startTimestamp), style: .timer)
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.white)
                             .monospacedDigit()
@@ -109,7 +109,7 @@ struct RunClaimLiveActivityLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack {
-                        Text(formatTime(context.state.elapsedSeconds))
+                        Text(Date(timeIntervalSince1970: context.state.startTimestamp), style: .timer)
                         Text("·")
                         Text(String(format: "%.2f km", context.state.distanceKm))
                     }
@@ -117,7 +117,7 @@ struct RunClaimLiveActivityLiveActivity: Widget {
                     .foregroundColor(.white)
                 }
             } compactLeading: {
-                Text(formatTime(context.state.elapsedSeconds))
+                Text(Date(timeIntervalSince1970: context.state.startTimestamp), style: .timer)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.white)
                     .monospacedDigit()
@@ -126,7 +126,7 @@ struct RunClaimLiveActivityLiveActivity: Widget {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.white)
             } minimal: {
-                Text(formatTime(context.state.elapsedSeconds))
+                Text(Date(timeIntervalSince1970: context.state.startTimestamp), style: .timer)
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.white)
                     .monospacedDigit()

@@ -8,8 +8,8 @@ class LiveActivityBridge: NSObject {
     // Actual value is Activity<RunClaimLiveActivityAttributes> on iOS 16.1+.
     private var activityInstance: Any? = nil
 
-    @objc(startActivity:distanceKm:)
-    func startActivity(_ elapsedSeconds: Double, distanceKm: Double) {
+    @objc(startActivity:distanceKm:startTimestamp:)
+    func startActivity(_ elapsedSeconds: Double, distanceKm: Double, startTimestamp: Double) {
         guard #available(iOS 16.2, *) else {
             print("[RunClaim] LiveActivity: iOS 16.2+ required, skipping")
             return
@@ -22,7 +22,8 @@ class LiveActivityBridge: NSObject {
         let attributes = RunClaimLiveActivityAttributes()
         let state = RunClaimLiveActivityAttributes.ContentState(
             elapsedSeconds: Int(elapsedSeconds),
-            distanceKm: distanceKm
+            distanceKm: distanceKm,
+            startTimestamp: startTimestamp
         )
         let content = ActivityContent(state: state, staleDate: nil)
         do {
@@ -37,14 +38,15 @@ class LiveActivityBridge: NSObject {
         }
     }
 
-    @objc(updateActivity:distanceKm:)
-    func updateActivity(_ elapsedSeconds: Double, distanceKm: Double) {
+    @objc(updateActivity:distanceKm:startTimestamp:)
+    func updateActivity(_ elapsedSeconds: Double, distanceKm: Double, startTimestamp: Double) {
         guard #available(iOS 16.2, *) else { return }
         guard let activity = activityInstance as? Activity<RunClaimLiveActivityAttributes> else { return }
 
         let state = RunClaimLiveActivityAttributes.ContentState(
             elapsedSeconds: Int(elapsedSeconds),
-            distanceKm: distanceKm
+            distanceKm: distanceKm,
+            startTimestamp: startTimestamp
         )
         let content = ActivityContent(state: state, staleDate: nil)
         Task {
