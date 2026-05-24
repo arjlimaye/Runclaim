@@ -78,19 +78,15 @@ function sha256Hex(str: string): string {
 
 export async function signInWithApple(): Promise<void> {
   if (Platform.OS !== 'ios') throw new Error('Apple sign-in is only available on iOS.');
-  const rawNonce = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-  const hashedNonce = sha256Hex(rawNonce);
   const credential = await appleAuth.performRequest({
     requestedOperation: appleAuth.Operation.LOGIN,
     requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    nonce: hashedNonce,
   });
   const idToken = credential.identityToken;
   if (!idToken) throw new Error('No identity token returned from Apple sign-in.');
   const { error } = await supabase.auth.signInWithIdToken({
     provider: 'apple',
     token: idToken,
-    nonce: rawNonce,
   });
   if (error) throw error;
 }
