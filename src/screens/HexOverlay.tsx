@@ -9,12 +9,12 @@ type Props = {
 };
 
 const DEPTH_COLORS: Record<number, { fill: string; stroke: string }> = {
-  1: { fill: 'rgba(62,207,178,0.15)', stroke: 'rgba(62,207,178,0.6)' },
-  2: { fill: 'rgba(62,207,178,0.20)', stroke: 'rgba(62,207,178,0.7)' },
-  3: { fill: 'rgba(62,207,178,0.25)', stroke: 'rgba(62,207,178,0.75)' },
-  4: { fill: 'rgba(62,207,178,0.30)', stroke: 'rgba(62,207,178,0.8)' },
-  5: { fill: 'rgba(62,207,178,0.35)', stroke: 'rgba(62,207,178,0.85)' },
-  6: { fill: 'rgba(62,207,178,0.40)', stroke: 'rgba(62,207,178,0.9)' },
+  1: { fill: 'rgba(62,207,178,0.20)', stroke: 'rgba(62,207,178,0.7)' },
+  2: { fill: 'rgba(62,207,178,0.28)', stroke: 'rgba(62,207,178,0.8)' },
+  3: { fill: 'rgba(62,207,178,0.35)', stroke: 'rgba(62,207,178,0.85)' },
+  4: { fill: 'rgba(62,207,178,0.42)', stroke: 'rgba(62,207,178,0.9)' },
+  5: { fill: 'rgba(62,207,178,0.50)', stroke: 'rgba(62,207,178,0.95)' },
+  6: { fill: 'rgba(62,207,178,0.58)', stroke: 'rgba(62,207,178,1.0)' },
   7: { fill: 'rgba(255, 220, 100, 0.5)', stroke: 'rgba(255, 220, 100, 1)' },
 };
 
@@ -81,7 +81,7 @@ export default function HexOverlay({ claimedHexIds, hexStore }: Props) {
             coordinates={corners}
             fillColor={fill}
             strokeColor={stroke}
-            strokeWidth={1.5}
+            strokeWidth={2}
           />
         );
       })}

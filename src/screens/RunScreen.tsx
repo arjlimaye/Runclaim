@@ -184,8 +184,9 @@ export default function RunScreen({ navigation }: any) {
   useEffect(() => {
     if (!tracking) return;
     if (Platform.OS === 'ios') {
+      startTimestampRef.current = Math.floor(Date.now() / 1000);
       console.log('[RunClaim] LiveActivityBridge.startActivity called', { elapsedSeconds: 0, distanceKm: 0, bridge: !!NativeModules.LiveActivityBridge });
-      NativeModules.LiveActivityBridge?.startActivity(0, 0, Math.floor(Date.now() / 1000));
+      NativeModules.LiveActivityBridge?.startActivity(0, 0, startTimestampRef.current);
       liveActivityStarted.current = true;
     }
   }, [tracking]);
@@ -196,7 +197,7 @@ export default function RunScreen({ navigation }: any) {
     if (elapsedSeconds % 10 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
-      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), Math.floor(Date.now() / 1000));
+      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), startTimestampRef.current ?? 0);
     }
   }, [elapsedSeconds, path]);
 

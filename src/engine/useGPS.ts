@@ -10,13 +10,13 @@ export type GPSPoint = {
 };
 
 const MAX_SPEED_MS = 12;       // spike rejection: > 43 km/h
-const MAX_ACCURACY_M = 15;
-const MIN_DISTANCE_M = 8;      // ignore duplicate points when standing still
+const MAX_ACCURACY_M = 20;
+const MIN_DISTANCE_M = 4;      // ignore duplicate points when standing still
 const EARTH_RADIUS = 6371000;
 
 const WATCH_OPTIONS = {
   enableHighAccuracy: true,
-  distanceFilter: 3,
+  distanceFilter: 4,
   timeout: 30000,
   ...(Platform.OS === 'android' ? { interval: 1000, fastestInterval: 500 } : {}),
   ...(Platform.OS === 'ios' ? { showsBackgroundLocationIndicator: true } : {}),

@@ -1,4 +1,4 @@
-const HEX_SIZE_METERS = 80;
+const HEX_SIZE_METERS = 100;
 const EARTH_RADIUS = 6371000;
 
 export function latLngToHexId(lat: number, lng: number): string {
@@ -19,7 +19,7 @@ function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number)
   return EARTH_RADIUS * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function interpolatePath(path: { lat: number; lng: number }[], stepMeters: number = 3): { lat: number; lng: number }[] {
+function interpolatePath(path: { lat: number; lng: number }[], stepMeters: number = 4): { lat: number; lng: number }[] {
   if (path.length < 2) return path;
   const result: { lat: number; lng: number }[] = [];
   for (let i = 0; i < path.length - 1; i++) {
@@ -36,23 +36,15 @@ function interpolatePath(path: { lat: number; lng: number }[], stepMeters: numbe
   return result;
 }
 
-function isNearPath(hexId: string, originalPath: { lat: number; lng: number }[], maxDistMeters: number): boolean {
-  const corners = hexIdToPolygon(hexId);
-  if (corners.length === 0) return false;
-  const centerLat = corners.reduce((sum, c) => sum + c.latitude, 0) / corners.length;
-  const centerLng = corners.reduce((sum, c) => sum + c.longitude, 0) / corners.length;
-  return originalPath.some(p => haversineMeters(p.lat, p.lng, centerLat, centerLng) <= maxDistMeters);
-}
-
 export function getClaimedHexes(path: { lat: number; lng: number }[]): string[] {
-  const dense = interpolatePath(path, 3);
+  const dense = interpolatePath(path, 4);
   const hexCounts: Record<string, number> = {};
   for (const point of dense) {
     const id = latLngToHexId(point.lat, point.lng);
     hexCounts[id] = (hexCounts[id] || 0) + 1;
   }
   return Object.entries(hexCounts)
-    .filter(([id, count]) => count >= 1 && isNearPath(id, path, 200))
+    .filter(([_, count]) => count >= 1)
     .map(([id]) => id);
 }
 
@@ -82,14 +74,14 @@ export function calcCityPct(
   claimedHexIds: string[],
   centerLat: number,
   centerLng: number,
-  radiusKm: number = 15
+  radiusKm: number = 10
 ): string {
   // Generate all hex IDs within a bounding box around the city center
   const radiusMeters = radiusKm * 1000;
   const latDelta = (radiusMeters / EARTH_RADIUS) * (180 / Math.PI);
   const lngDelta = latDelta / Math.cos(centerLat * Math.PI / 180);
 
-  const latSteps = Math.ceil((radiusMeters * 2) / HEX_SIZE_METERS);
+  const latSteps = Math.ceil((radiusMeters * 2) / (HEX_SIZE_METERS * 0.866));
   const lngSteps = Math.ceil((radiusMeters * 2) / HEX_SIZE_METERS);
 
   const totalHexIds = new Set<string>();
