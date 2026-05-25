@@ -404,7 +404,7 @@ export default function RunScreen({ navigation }: any) {
               style={styles.btnMap}
               onPressIn={() => pressIn(mapScale)}
               onPressOut={() => pressOut(mapScale)}
-              onPress={() => navigation.navigate('Map')}
+              onPress={() => navigation.navigate('Map', { fromRun: true })}
               activeOpacity={1}>
               <Svg width={13} height={13} viewBox="0 0 24 24">
                 <Polygon

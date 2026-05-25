@@ -134,7 +134,7 @@ export default function SummaryScreen({ navigation, route }: any) {
       <View style={styles.bottom}>
         <TouchableOpacity
           style={styles.btnPrimary}
-          onPress={() => navigation.navigate('Map')}>
+          onPress={() => navigation.navigate('Map', { fromRun: true })}>
           <Text style={styles.btnPrimaryText}>View Territory</Text>
         </TouchableOpacity>
         <TouchableOpacity

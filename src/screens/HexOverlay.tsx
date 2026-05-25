@@ -8,19 +8,18 @@ type Props = {
   hexStore?: HexStore;
 };
 
+const DEPTH_COLORS: Record<number, { fill: string; stroke: string }> = {
+  1: { fill: 'rgba(62,207,178,0.15)', stroke: 'rgba(62,207,178,0.6)' },
+  2: { fill: 'rgba(62,207,178,0.20)', stroke: 'rgba(62,207,178,0.7)' },
+  3: { fill: 'rgba(62,207,178,0.25)', stroke: 'rgba(62,207,178,0.75)' },
+  4: { fill: 'rgba(62,207,178,0.30)', stroke: 'rgba(62,207,178,0.8)' },
+  5: { fill: 'rgba(62,207,178,0.35)', stroke: 'rgba(62,207,178,0.85)' },
+  6: { fill: 'rgba(62,207,178,0.40)', stroke: 'rgba(62,207,178,0.9)' },
+  7: { fill: 'rgba(255, 220, 100, 0.5)', stroke: 'rgba(255, 220, 100, 1)' },
+};
+
 function depthToColors(depth: number): { fill: string; stroke: string } {
-  if (depth === 7) {
-    return {
-      fill: 'rgba(255, 220, 100, 0.5)',
-      stroke: 'rgba(255, 220, 100, 1)',
-    };
-  }
-  const opacity = 0.08 + (depth - 1) * (0.35 / 5);
-  const strokeOpacity = 0.3 + (depth - 1) * (0.6 / 5);
-  return {
-    fill: `rgba(62, 207, 178, ${opacity.toFixed(2)})`,
-    stroke: `rgba(62, 207, 178, ${strokeOpacity.toFixed(2)})`,
-  };
+  return DEPTH_COLORS[depth] ?? DEPTH_COLORS[1];
 }
 
 export default function HexOverlay({ claimedHexIds, hexStore }: Props) {
@@ -82,7 +81,7 @@ export default function HexOverlay({ claimedHexIds, hexStore }: Props) {
             coordinates={corners}
             fillColor={fill}
             strokeColor={stroke}
-            strokeWidth={1}
+            strokeWidth={1.5}
           />
         );
       })}

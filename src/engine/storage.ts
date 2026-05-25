@@ -89,8 +89,10 @@ export async function processRunHexes(
   if (upsertRows.length > 0 && ownerId !== 'local_user') {
     const { error } = await supabase
       .from('hexes')
-      .upsert(upsertRows, { onConflict: 'id,owner_id' });
+      .upsert(upsertRows, { onConflict: 'id' });
     if (error) console.warn('Supabase hex sync error:', error.message);
+    // Brief delay to allow Supabase to propagate before MapScreen fetches
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 
   return { newHexes, reinforced, maxDepth };

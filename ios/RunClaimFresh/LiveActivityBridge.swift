@@ -21,7 +21,7 @@ class LiveActivityBridge: NSObject {
 
         let attributes = RunClaimLiveActivityAttributes()
         let state = RunClaimLiveActivityAttributes.ContentState(
-            elapsedSeconds: Int(elapsedSeconds),
+            elapsedSeconds: 0,
             distanceKm: distanceKm,
             startTimestamp: startTimestamp
         )

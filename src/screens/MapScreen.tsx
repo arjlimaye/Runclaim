@@ -10,7 +10,7 @@ import HexOverlay from './HexOverlay';
 
 type Props = NativeStackScreenProps<any, 'Map'>;
 
-export default function MapScreen({ navigation }: Props) {
+export default function MapScreen({ navigation, route }: Props) {
   const [hexStore, setHexStore] = useState<HexStore>({});
   const [region, setRegion] = useState<Region | null>(null);
   const [isDark, setIsDark] = useState(true);
@@ -23,6 +23,9 @@ export default function MapScreen({ navigation }: Props) {
 
       const fetchHexes = async () => {
         try {
+          if ((route.params as any)?.fromRun) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+          }
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {
             const { data, error } = await supabase
