@@ -79,3 +79,5 @@ src/lib/config.ts
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+ios/sentry.properties
+android/sentry.properties
