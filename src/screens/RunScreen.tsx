@@ -9,6 +9,7 @@ import {
   Easing,
   Platform,
   NativeModules,
+  AppState,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Polygon } from 'react-native-svg';
@@ -110,6 +111,16 @@ export default function RunScreen({ navigation }: any) {
         runStartTimeRef.current = null;
       }
     };
+  }, [tracking, isPaused]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active' && tracking && !isPaused && runStartTimeRef.current !== null) {
+        const correctElapsed = accumulatedRef.current + Math.floor((Date.now() - runStartTimeRef.current) / 1000);
+        setElapsedSeconds(correctElapsed);
+      }
+    });
+    return () => sub.remove();
   }, [tracking, isPaused]);
 
   useEffect(() => {
@@ -406,7 +417,7 @@ export default function RunScreen({ navigation }: any) {
               style={styles.btnMap}
               onPressIn={() => pressIn(mapScale)}
               onPressOut={() => pressOut(mapScale)}
-              onPress={() => navigation.navigate('Map', { fromRun: true })}
+              onPress={() => navigation.navigate('Map', { fromRun: false })}
               activeOpacity={1}>
               <Svg width={13} height={13} viewBox="0 0 24 24">
                 <Polygon
