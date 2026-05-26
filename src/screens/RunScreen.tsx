@@ -40,7 +40,8 @@ export default function RunScreen({ navigation }: any) {
   const glowLoopRef = useRef<any>(null);
   const pulseLoopRef = useRef<any>(null);
   const liveActivityStarted = useRef(false);
-  const startTimestampRef = useRef<number | null>(null);
+  const runStartTimeRef = useRef<number | null>(null);
+  const liveActivityStartRef = useRef<number>(0);
   const accumulatedRef = useRef(0);
 
   useEffect(() => {
@@ -97,16 +98,16 @@ export default function RunScreen({ navigation }: any) {
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (tracking && !isPaused) {
-      startTimestampRef.current = Date.now();
+      runStartTimeRef.current = Date.now();
       interval = setInterval(() => {
-        setElapsedSeconds(accumulatedRef.current + Math.floor((Date.now() - startTimestampRef.current!) / 1000));
+        setElapsedSeconds(accumulatedRef.current + Math.floor((Date.now() - runStartTimeRef.current!) / 1000));
       }, 1000);
     }
     return () => {
       clearInterval(interval);
-      if (startTimestampRef.current !== null) {
-        accumulatedRef.current += Math.floor((Date.now() - startTimestampRef.current) / 1000);
-        startTimestampRef.current = null;
+      if (runStartTimeRef.current !== null) {
+        accumulatedRef.current += Math.floor((Date.now() - runStartTimeRef.current) / 1000);
+        runStartTimeRef.current = null;
       }
     };
   }, [tracking, isPaused]);
@@ -184,9 +185,9 @@ export default function RunScreen({ navigation }: any) {
   useEffect(() => {
     if (!tracking) return;
     if (Platform.OS === 'ios') {
-      startTimestampRef.current = Math.floor(Date.now() / 1000);
+      liveActivityStartRef.current = Math.floor(Date.now() / 1000);
       console.log('[RunClaim] LiveActivityBridge.startActivity called', { elapsedSeconds: 0, distanceKm: 0, bridge: !!NativeModules.LiveActivityBridge });
-      NativeModules.LiveActivityBridge?.startActivity(0, 0, startTimestampRef.current);
+      NativeModules.LiveActivityBridge?.startActivity(0, 0, liveActivityStartRef.current);
       liveActivityStarted.current = true;
     }
   }, [tracking]);
@@ -197,7 +198,7 @@ export default function RunScreen({ navigation }: any) {
     if (elapsedSeconds % 10 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
-      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), startTimestampRef.current ?? 0);
+      NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), liveActivityStartRef.current);
     }
   }, [elapsedSeconds, path]);
 

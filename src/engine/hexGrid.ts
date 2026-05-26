@@ -54,16 +54,24 @@ export function hexIdToPolygon(hexId: string): { latitude: number; longitude: nu
   const [q, r] = parts.map(Number);
   if (!isFinite(q) || !isFinite(r)) return [];
 
-  // Inverse of latLngToHexId: recover Mercator x/y from q/r
-  const y = (r * HEX_SIZE_METERS * 3) / 2;
-  const x = (q * HEX_SIZE_METERS + y / 3) * Math.sqrt(3);
+  // Invert latLngToHexId:
+  // Forward: q = round((x * sqrt(3)/3 - y/3) / SIZE), r = round((y * 2/3) / SIZE)
+  // Inverse: y = r * SIZE * 3/2, x = (q * SIZE + y/3) * sqrt(3)
+  // BUT this is wrong — let's derive correctly:
+  // r = round(y * 2/3 / SIZE) => y_center = r * SIZE * 3/2
+  // q = round((x * sqrt(3)/3 - y/3) / SIZE) => x_center = (q * SIZE + y_center/3) * sqrt(3)
+
+  const y_center = r * HEX_SIZE_METERS * 1.5;
+  const x_center = (q * HEX_SIZE_METERS + y_center / 3) * Math.sqrt(3);
 
   const corners: { latitude: number; longitude: number }[] = [];
   for (let i = 0; i < 6; i++) {
-    const angle = (Math.PI / 180) * (60 * i + 30);
-    const cx = x + HEX_SIZE_METERS * Math.cos(angle);
-    const cy = y + HEX_SIZE_METERS * Math.sin(angle);
-    const lat = ((Math.atan(Math.exp(cy / EARTH_RADIUS)) - Math.PI / 4) * 2) * (180 / Math.PI);
+    const angle_deg = 60 * i;
+    const angle_rad = (Math.PI / 180) * angle_deg;
+    const cx = x_center + HEX_SIZE_METERS * Math.cos(angle_rad);
+    const cy = y_center + HEX_SIZE_METERS * Math.sin(angle_rad);
+    // Inverse Mercator projection
+    const lat = (2 * Math.atan(Math.exp(cy / EARTH_RADIUS)) - Math.PI / 2) * (180 / Math.PI);
     const lng = (cx / EARTH_RADIUS) * (180 / Math.PI);
     corners.push({ latitude: lat, longitude: lng });
   }
@@ -76,20 +84,22 @@ export function calcCityPct(
   centerLng: number,
   radiusKm: number = 10
 ): string {
-  // Generate all hex IDs within a bounding box around the city center
-  const radiusMeters = radiusKm * 1000;
-  const latDelta = (radiusMeters / EARTH_RADIUS) * (180 / Math.PI);
-  const lngDelta = latDelta / Math.cos(centerLat * Math.PI / 180);
-
-  const latSteps = Math.ceil((radiusMeters * 2) / (HEX_SIZE_METERS * 0.866));
-  const lngSteps = Math.ceil((radiusMeters * 2) / HEX_SIZE_METERS);
+  if (claimedHexIds.length === 0) return '0.00';
 
   const totalHexIds = new Set<string>();
 
+  // Sample the city area using the same projection as latLngToHexId
+  // Step size = HEX_SIZE_METERS in degrees approx
+  const latStep = (HEX_SIZE_METERS / EARTH_RADIUS) * (180 / Math.PI) * 0.75;
+  const lngStep = latStep / Math.cos(centerLat * Math.PI / 180);
+
+  const latSteps = Math.ceil(radiusKm * 1000 * 2 / (HEX_SIZE_METERS * 0.75));
+  const lngSteps = Math.ceil(radiusKm * 1000 * 2 / HEX_SIZE_METERS);
+
   for (let i = 0; i <= latSteps; i++) {
     for (let j = 0; j <= lngSteps; j++) {
-      const lat = (centerLat - latDelta) + (i / latSteps) * latDelta * 2;
-      const lng = (centerLng - lngDelta) + (j / lngSteps) * lngDelta * 2;
+      const lat = (centerLat - latSteps * latStep / 2) + i * latStep;
+      const lng = (centerLng - lngSteps * lngStep / 2) + j * lngStep;
       totalHexIds.add(latLngToHexId(lat, lng));
     }
   }
