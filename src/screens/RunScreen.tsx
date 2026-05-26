@@ -206,7 +206,7 @@ export default function RunScreen({ navigation }: any) {
   // Update Live Activity every 10 seconds (iOS throttles Live Activity updates heavily in background)
   useEffect(() => {
     if (!liveActivityStarted.current) return;
-    if (elapsedSeconds % 10 !== 0) return;
+    if (elapsedSeconds % 5 !== 0) return;
     if (Platform.OS === 'ios') {
       console.log('[RunClaim] LiveActivityBridge.updateActivity called', { elapsedSeconds, distanceKm: getDistanceKm(path) });
       NativeModules.LiveActivityBridge?.updateActivity(elapsedSeconds, getDistanceKm(path), liveActivityStartRef.current);

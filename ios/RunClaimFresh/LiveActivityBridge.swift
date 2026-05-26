@@ -25,7 +25,7 @@ class LiveActivityBridge: NSObject {
             distanceKm: distanceKm,
             startTimestamp: startTimestamp
         )
-        let content = ActivityContent(state: state, staleDate: nil)
+        let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(600))
         do {
             let activity = try Activity<RunClaimLiveActivityAttributes>.request(
                 attributes: attributes,
@@ -48,7 +48,7 @@ class LiveActivityBridge: NSObject {
             distanceKm: distanceKm,
             startTimestamp: startTimestamp
         )
-        let content = ActivityContent(state: state, staleDate: nil)
+        let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(600))
         Task {
             await activity.update(content)
         }
