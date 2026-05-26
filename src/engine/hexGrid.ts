@@ -3,7 +3,7 @@
 // q = round((x * sqrt(3)/3 - y/3) / SIZE), r = round(y * 2/3 / SIZE)
 // Inverse: y_center = r * SIZE * 1.5, x_center = q * SIZE * sqrt(3) + y_center / sqrt(3)
 
-const HEX_SIZE_METERS = 100;
+const HEX_SIZE_METERS = 150;
 const EARTH_RADIUS = 6371000;
 
 export function latLngToHexId(lat: number, lng: number): string {
@@ -24,7 +24,7 @@ function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number)
   return EARTH_RADIUS * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function interpolatePath(path: { lat: number; lng: number }[], stepMeters: number = 4): { lat: number; lng: number }[] {
+function interpolatePath(path: { lat: number; lng: number }[], stepMeters: number = 7): { lat: number; lng: number }[] {
   if (path.length < 2) return path;
   const result: { lat: number; lng: number }[] = [];
   for (let i = 0; i < path.length - 1; i++) {
