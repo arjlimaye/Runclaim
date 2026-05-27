@@ -88,11 +88,10 @@ export async function processRunHexes(
   // Sync to Supabase — await so MapScreen gets fresh data on next focus
   if (upsertRows.length > 0 && ownerId !== 'local_user') {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        await supabase.auth.refreshSession();
-      }
-      const { error } = await supabase.from('hexes').upsert(upsertRows, { onConflict: 'id' });
+      await supabase.auth.refreshSession();
+      const { error } = await supabase
+        .from('hexes')
+        .upsert(upsertRows, { onConflict: 'id' });
       if (error) console.warn('[RunClaim] upsert error:', JSON.stringify(error));
       else console.log('[RunClaim] upsert SUCCESS rows:', upsertRows.length);
     } catch (e) {
