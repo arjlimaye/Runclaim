@@ -265,7 +265,7 @@ export default function RunScreen({ navigation }: any) {
         distanceKm: getDistance(),
         elapsedSeconds,
         maxDepth,
-        punePct: cityPct,
+        punePct: freshPct,
         isFirstRun: newHexes === 0 && reinforced === 0,
       });
     } catch (e) {
