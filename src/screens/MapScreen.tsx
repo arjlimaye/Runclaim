@@ -85,7 +85,7 @@ export default function MapScreen({ navigation, route }: Props) {
       return () => {
         cancelled = true;
       };
-    }, [])
+    }, [route.params])
   );
 
   if (!region) {
