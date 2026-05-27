@@ -252,6 +252,8 @@ export default function RunScreen({ navigation }: any) {
         // proceed with local_user fallback
       }
       const { newHexes, reinforced, maxDepth } = await processRunHexes(claimedIds, ownerId);
+      const freshStore = await loadHexStore();
+      const freshPct = calcCityPct(Object.keys(freshStore), centerLatRef.current ?? 18.5204, centerLngRef.current ?? 73.8567);
       console.log(`[RunClaim] processRunHexes done — new: ${newHexes}, reinforced: ${reinforced}, maxDepth: ${maxDepth}`);
       if (Platform.OS === 'ios') {
         NativeModules.LiveActivityBridge?.endActivity();
