@@ -80,22 +80,7 @@ export function calcCityPct(
   centerLng: number,
   radiusKm: number = 10
 ): string {
+  const PUNE_WALKABLE_HEXES = 9589;
   if (claimedHexIds.length === 0) return '0.00';
-  const radiusMeters = radiusKm * 1000;
-  const totalHexIds = new Set<string>();
-  const latStep = (HEX_SIZE_METERS * 0.75 / EARTH_RADIUS) * (180 / Math.PI);
-  const lngStep = (HEX_SIZE_METERS * Math.sqrt(3) / EARTH_RADIUS) * (180 / Math.PI);
-  const latSteps = Math.ceil(radiusMeters * 2 / (HEX_SIZE_METERS * 0.75));
-  const lngSteps = Math.ceil(radiusMeters * 2 / (HEX_SIZE_METERS * Math.sqrt(3)));
-  for (let i = 0; i <= latSteps; i++) {
-    for (let j = 0; j <= lngSteps; j++) {
-      const lat = (centerLat - latSteps * latStep / 2) + i * latStep;
-      const lng = (centerLng - lngSteps * lngStep / 2) + j * lngStep;
-      totalHexIds.add(latLngToHexId(lat, lng));
-    }
-  }
-  const totalHexes = totalHexIds.size;
-  const claimedCount = claimedHexIds.filter(id => totalHexIds.has(id)).length;
-  if (totalHexes === 0) return '0.00';
-  return ((claimedCount / totalHexes) * 100).toFixed(2);
+  return ((claimedHexIds.length / PUNE_WALKABLE_HEXES) * 100).toFixed(2);
 }
