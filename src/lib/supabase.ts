@@ -12,3 +12,5 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     storageKey: 'runclaim-auth-token',
   },
 });
+
+supabase.auth.onAuthStateChange(() => {});

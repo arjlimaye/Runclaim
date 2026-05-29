@@ -259,6 +259,7 @@ export default function RunScreen({ navigation }: any) {
         NativeModules.LiveActivityBridge?.endActivity();
         liveActivityStarted.current = false;
       }
+      isEndingRef.current = false;
       navigation.navigate('Claim', {
         hexesClaimed: newHexes,
         reinforced,
