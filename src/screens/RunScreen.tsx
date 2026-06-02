@@ -236,6 +236,7 @@ export default function RunScreen({ navigation }: any) {
   };
 
   const handleEndRun = async () => {
+    console.log('[RunClaim] END RUN TAPPED');
     if (isEndingRef.current) return;
     isEndingRef.current = true;
     setIsEnding(true);
@@ -246,8 +247,8 @@ export default function RunScreen({ navigation }: any) {
       console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
       let ownerId = 'local_user';
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        ownerId = user?.id ?? 'local_user';
+        const { data: { session } } = await supabase.auth.getSession();
+        ownerId = session?.user?.id ?? 'local_user';
       } catch {
         // proceed with local_user fallback
       }
@@ -383,7 +384,6 @@ export default function RunScreen({ navigation }: any) {
               onPressIn={() => pressIn(pauseScale)}
               onPressOut={() => pressOut(pauseScale)}
               onPress={handleEndRun}
-              disabled={isEnding}
               activeOpacity={1}>
               <Text style={styles.btnEndText}>End Run</Text>
             </TouchableOpacity>

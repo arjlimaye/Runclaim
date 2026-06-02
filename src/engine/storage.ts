@@ -88,7 +88,6 @@ export async function processRunHexes(
   // Sync to Supabase — await so MapScreen gets fresh data on next focus
   if (upsertRows.length > 0 && ownerId !== 'local_user') {
     try {
-      await supabase.auth.refreshSession();
       const { error } = await supabase
         .from('hexes')
         .upsert(upsertRows, { onConflict: 'id' });
