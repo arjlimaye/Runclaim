@@ -247,10 +247,15 @@ export default function RunScreen({ navigation }: any) {
       console.log(`[RunClaim] Run ended. Hexes claimed: ${claimedIds.length}`);
       let ownerId = 'local_user';
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        let { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          const refreshed = await supabase.auth.refreshSession();
+          session = refreshed.data.session;
+        }
         ownerId = session?.user?.id ?? 'local_user';
-      } catch {
-        // proceed with local_user fallback
+        console.log('[RunClaim] resolved ownerId:', ownerId);
+      } catch (e) {
+        console.log('[RunClaim] session resolve failed:', e);
       }
       const { newHexes, reinforced, maxDepth } = await processRunHexes(claimedIds, ownerId);
       const freshStore = await loadHexStore();
