@@ -62,14 +62,20 @@ export function hexIdToPolygon(hexId: string): { latitude: number; longitude: nu
   const y_center = r * HEX_SIZE_METERS * 1.5;
   const x_center = q * HEX_SIZE_METERS * Math.sqrt(3) + y_center / Math.sqrt(3);
 
+  const centerLat = (2 * Math.atan(Math.exp(y_center / EARTH_RADIUS)) - Math.PI / 2) * (180 / Math.PI);
+  const centerLng = (x_center / EARTH_RADIUS) * (180 / Math.PI);
+  const metersPerDegLat = 111320;
+  const metersPerDegLng = 111320 * Math.cos(centerLat * Math.PI / 180);
+
   const corners: { latitude: number; longitude: number }[] = [];
   for (let i = 0; i < 6; i++) {
     const angle_rad = (Math.PI / 180) * (60 * i);
-    const cx = x_center + HEX_SIZE_METERS * Math.cos(angle_rad);
-    const cy = y_center + HEX_SIZE_METERS * Math.sin(angle_rad);
-    const lat = (2 * Math.atan(Math.exp(cy / EARTH_RADIUS)) - Math.PI / 2) * (180 / Math.PI);
-    const lng = (cx / EARTH_RADIUS) * (180 / Math.PI);
-    corners.push({ latitude: lat, longitude: lng });
+    const dx = HEX_SIZE_METERS * Math.cos(angle_rad);
+    const dy = HEX_SIZE_METERS * Math.sin(angle_rad);
+    corners.push({
+      latitude: centerLat + (dy / metersPerDegLat),
+      longitude: centerLng + (dx / metersPerDegLng),
+    });
   }
   return corners;
 }
