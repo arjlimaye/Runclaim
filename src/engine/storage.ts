@@ -85,19 +85,17 @@ export async function processRunHexes(
   // Save locally first
   await saveHexStore(store);
 
-  // Sync to Supabase — await so MapScreen gets fresh data on next focus
+  // Sync to Supabase in the background — does not block return
   if (upsertRows.length > 0 && ownerId !== 'local_user') {
-    try {
-      console.log('[RunClaim] about to upsert, ownerId:', ownerId, 'rows:', upsertRows.length);
-      const { error } = await supabase
-        .from('hexes')
-        .upsert(upsertRows, { onConflict: 'id' });
-      if (error) console.warn('[RunClaim] upsert error:', JSON.stringify(error));
-      else console.log('[RunClaim] upsert SUCCESS rows:', upsertRows.length);
-    } catch (e) {
-      console.warn('[RunClaim] upsert exception:', e);
-    }
-    await new Promise(resolve => setTimeout(resolve, 500));
+    console.log('[RunClaim] about to upsert, ownerId:', ownerId, 'rows:', upsertRows.length);
+    supabase
+      .from('hexes')
+      .upsert(upsertRows, { onConflict: 'id' })
+      .then(({ error }) => {
+        if (error) console.warn('[RunClaim] upsert error:', JSON.stringify(error));
+        else console.log('[RunClaim] upsert SUCCESS rows:', upsertRows.length);
+      })
+      .catch((e) => console.warn('[RunClaim] upsert exception:', e));
   }
 
   return { newHexes, reinforced, maxDepth };
